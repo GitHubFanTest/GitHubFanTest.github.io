@@ -77,4 +77,16 @@ a:hover {
     background-color: #008ba3;
 }
 
+.github-stats-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+.github-stats-container img {
+  max-width: 100%;
+}
+
+
 
