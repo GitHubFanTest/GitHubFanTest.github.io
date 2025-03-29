@@ -1,2 +1,2 @@
 # GitHubFanTest.github.io
-bryce.is-a.dev
+The CNAME of https://bryce.is-a.dev
