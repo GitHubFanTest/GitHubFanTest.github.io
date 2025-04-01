@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-T4K0VKTYV8"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-T4K0VKTYV8");
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hershey's Purrfect Website</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-icons-font@v3/font/simple-icons.min.css"
+    />
+    <link rel="icon" href="favicon.ico" />
+
     <style>
-      /* Basic CSS styles for Hershey's website */
+      /* Basic dark mode CSS styles */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f9f9f9;
-        color: #333;
+        background-color: #121212;
+        color: white;
       }
 
       header {
-        background-color: #4caf50;
+        background-color: #1e1e1e;
         color: white;
         padding: 20px;
         text-align: center;
@@ -40,16 +61,60 @@
       section {
         padding: 20px;
         margin: 10px 0;
+        background-color: #333;
       }
 
       footer {
         text-align: center;
         padding: 10px;
-        background-color: #4caf50;
+        background-color: #1e1e1e;
         color: white;
         position: fixed;
         width: 100%;
         bottom: 0;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #333;
+        min-width: 160px;
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .github-stats-container {
+        margin-top: 20px;
+        text-align: center;
       }
     </style>
   </head>
@@ -84,6 +149,49 @@
       <h2>Contact</h2>
       <p>Feel free to reach out! We're always happy to chat.</p>
     </section>
+
+    <div class="dropdown">
+      <button class="dropbtn">My Socials</button>
+      <div class="dropdown-content">
+        <p>
+          <a href="https://github.com/GitHubFanTest" target="_blank">
+            <img
+              src="https://cdn.simpleicons.org/github/FFFFFF"
+              alt="GitHub"
+              width="30"
+              style="
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 5px;
+              "
+            />
+            GitHub
+          </a>
+        </p>
+        <p>
+          <a href="https://youtube.com/@BloxyBryceYT" target="_blank">
+            <img
+              src="https://cdn.simpleicons.org/youtube/FFFFFF"
+              width="30"
+              style="
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 5px;
+              "
+            />
+            YouTube
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="github-stats-container">
+      <img
+        src="https://github-readme-stats.vercel.app/api?username=GitHubFanTest&show_icons=true&theme=dark"
+        alt="GitHub Stats"
+        name="github-stats"
+      />
+    </div>
 
     <footer>
       <p>Created with love by Hershey and Bryce</p>
