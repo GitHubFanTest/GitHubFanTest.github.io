@@ -93,3 +93,10 @@ a:hover {
   left: -9999px;
   top: -9999px;
 }
+
+.fromphil {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
