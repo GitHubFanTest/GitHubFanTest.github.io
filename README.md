@@ -16,8 +16,9 @@ This is my website. My website is bad. If you want to make it good, go down belo
    npm test
 7. **Commit your changes**:
    git add .
+
    git commit -m "Add a descriptive commit message for your changes"
-8. **Push the changes to your fork**:
+9. **Push the changes to your fork**:
    git push origin your-branch-name
-9. **Create a pull request**:
+10. **Create a pull request**:
    - Go to your forked repository on GitHub and click "New Pull Request". Select the branch with your changes and submit the pull request.
