@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat-box {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #ff6600;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e65c00;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #ffedcc;
+            border-radius: 5px;
+            max-width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .message-cat {
+            background-color: #ffdfdf;
+            text-align: right;
+        }
+
+        #name-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        #name-input {
+            width: 80%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="name-container">
+            <input type="text" id="name-input" placeholder="Enter your cat name">
+            <button onclick="setName()">Set Name</button>
+        </div>
+
+        <div id="chat-box"></div>
+        <input type="text" id="chat-input" placeholder="type your meow...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        let userName = localStorage.getItem('catName') || ''; // Get name from localStorage
+
+        if (userName) {
+            document.getElementById('name-container').style.display = 'none'; // Hide name input if name exists
+        }
+
+        function setName() {
+            const nameInput = document.getElementById('name-input');
+            userName = nameInput.value.trim();
+            if (userName !== "") {
+                localStorage.setItem('catName', userName); // Save name to localStorage
+                document.getElementById('name-container').style.display = 'none'; // Hide name input
+                document.getElementById('chat-input').focus(); // Focus on chat input
+            } else {
+                alert('Please enter a name!');
+            }
+        }
+
+        function sendMessage() {
+            if (!userName) {
+                alert('Please set your cat name first!');
+                return;
+            }
+
+            let input = document.getElementById('chat-input');
+            let message = input.value.trim();
+            if (message !== "") {
+                let chatBox = document.getElementById('chat-box');
+                let messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', 'message-cat');
+                messageDiv.textContent = `${userName} says: ${message}`;
+                chatBox.appendChild(messageDiv);
+                input.value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
