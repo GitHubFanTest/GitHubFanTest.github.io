@@ -1,132 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat Chat Servers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
 
-        .chat-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    .chat-container {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        #chat-box {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
+    #chat-box {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      padding: 5px;
+      border-radius: 5px;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
 
-        button {
-            padding: 10px 15px;
-            background-color: #ff6600;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
+    button {
+      padding: 10px 15px;
+      background-color: #ff6600;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+    }
 
-        button:hover {
-            background-color: #e65c00;
-        }
+    button:hover {
+      background-color: #e65c00;
+    }
 
-        .message {
-            margin: 5px 0;
-            padding: 10px;
-            background-color: #ffedcc;
-            border-radius: 5px;
-            max-width: 70%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .message-cat {
-            background-color: #ffdfdf;
-            text-align: right;
-        }
-
-        #name-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        #name-input {
-            width: 80%;
-            margin: 0 auto;
-            margin-bottom: 10px;
-        }
-    </style>
+    .message {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #ffedcc;
+      border-radius: 5px;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div id="name-container">
-            <input type="text" id="name-input" placeholder="Enter your cat name">
-            <button onclick="setName()">Set Name</button>
-        </div>
-
-        <div id="chat-box"></div>
-        <input type="text" id="chat-input" placeholder="type your meow...">
-        <button onclick="sendMessage()">Send</button>
+  <div class="chat-container">
+    <div id="name-container">
+      <input type="text" id="name-input" placeholder="Enter your cat name">
+      <button onclick="setName()">Set Name</button>
     </div>
 
-    <script>
-        let userName = localStorage.getItem('catName') || ''; // Get name from localStorage
+    <!-- Server Selection -->
+    <select id="server-select" onchange="changeServer()">
+      <option value="catnip">Catnip</option>
+      <option value="kitty_corner">Kitty Corner</option>
+      <option value="pawsitive_vibes">Pawsitive Vibes</option>
+    </select>
 
-        if (userName) {
-            document.getElementById('name-container').style.display = 'none'; // Hide name input if name exists
-        }
+    <div id="chat-box"></div>
+    <input type="text" id="chat-input" placeholder="Type your meow...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
-        function setName() {
-            const nameInput = document.getElementById('name-input');
-            userName = nameInput.value.trim();
-            if (userName !== "") {
-                localStorage.setItem('catName', userName); // Save name to localStorage
-                document.getElementById('name-container').style.display = 'none'; // Hide name input
-                document.getElementById('chat-input').focus(); // Focus on chat input
-            } else {
-                alert('Please enter a name!');
-            }
-        }
+  <script>
+    // load saved name from localStorage
+    let userName = localStorage.getItem('catName') || '';
+    if (userName) {
+      document.getElementById('name-container').style.display = 'none';
+    }
 
-        function sendMessage() {
-            if (!userName) {
-                alert('Please set your cat name first!');
-                return;
-            }
+    // current server channel (default: catnip)
+    let currentServer = document.getElementById('server-select').value;
+    
+    // load messages for current server from localStorage
+    function loadMessages() {
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML = ''; // clear chat box
+      const saved = localStorage.getItem('messages_' + currentServer);
+      let messages = saved ? JSON.parse(saved) : [];
+      messages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.textContent = msg;
+        chatBox.appendChild(messageDiv);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-            let input = document.getElementById('chat-input');
-            let message = input.value.trim();
-            if (message !== "") {
-                let chatBox = document.getElementById('chat-box');
-                let messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', 'message-cat');
-                messageDiv.textContent = `${userName} says: ${message}`;
-                chatBox.appendChild(messageDiv);
-                input.value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-    </script>
+    // change server function
+    function changeServer() {
+      currentServer = document.getElementById('server-select').value;
+      loadMessages();
+    }
+
+    // set name and save to localStorage
+    function setName() {
+      const nameInput = document.getElementById('name-input');
+      userName = nameInput.value.trim();
+      if (userName !== "") {
+        localStorage.setItem('catName', userName);
+        document.getElementById('name-container').style.display = 'none';
+        document.getElementById('chat-input').focus();
+      } else {
+        alert('Please enter a name!');
+      }
+    }
+
+    // send message and save to localStorage for the current server
+    function sendMessage() {
+      if (!userName) {
+        alert('Please set your cat name first!');
+        return;
+      }
+      let input = document.getElementById('chat-input');
+      let message = input.value.trim();
+      if (message !== "") {
+        let fullMessage = `${userName} says: ${message}`;
+        // load current messages
+        const saved = localStorage.getItem('messages_' + currentServer);
+        let messages = saved ? JSON.parse(saved) : [];
+        messages.push(fullMessage);
+        // save updated messages
+        localStorage.setItem('messages_' + currentServer, JSON.stringify(messages));
+        // add message to chat box
+        const chatBox = document.getElementById('chat-box');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.textContent = fullMessage;
+        chatBox.appendChild(messageDiv);
+        input.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
+    // initial load of messages for default server
+    loadMessages();
+  </script>
 </body>
 </html>
