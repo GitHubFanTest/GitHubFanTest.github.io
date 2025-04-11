@@ -1,0 +1,37 @@
+name: Backup GitHub Pages to Date-based Folder
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up folder with current date
+        id: set_folder
+        run: |
+          # Get the current date in YYYYMMDD format
+          current_date=$(date +'%Y%m%d')
+          echo "Backup folder: $current_date"
+          echo "::set-output name=folder::$current_date"
+
+      - name: Create folder and add content
+        run: |
+          # Check out the backup branch
+          git checkout -b backup  # Create a new backup branch if not exists
+          git pull origin backup  # Pull the latest changes from the backup branch
+
+          # Create the folder with the current date and move all files to it
+          mkdir -p "backup/$current_date"
+          cp -r * "backup/$current_date/"
+
+      - name: Commit and push the backup
+        run: |
+          git add .
+          git commit -m "Backup GitHub Pages content for ${{ steps.set_folder.outputs.folder }}"
+          git push origin backup  # Push the changes to the backup branch
