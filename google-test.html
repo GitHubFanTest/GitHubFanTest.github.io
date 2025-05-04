@@ -10,9 +10,31 @@
     <h1>This is a google login test.</h1>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <script>
+      // Decode the JWT token to extract user info
+      function parseJwt(token) {
+        var base64Url = token.split(".")[1];
+        var base64 = base64Url.replace("-", "+").replace("_", "/");
+        var jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        );
+
+        return JSON.parse(jsonPayload);
+      }
+
+      // Handle credential response
       function handleCredentialResponse(response) {
         console.log("Encoded JWT ID token: " + response.credential);
+
+        // Parse the JWT token and log user info
+        const userInfo = parseJwt(response.credential);
+        console.log("User info: ", userInfo); // This will display decoded user info
       }
+
       window.onload = function () {
         google.accounts.id.initialize({
           client_id:
