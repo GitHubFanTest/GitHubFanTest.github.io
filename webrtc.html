@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple WebRTC Screen Share</title>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #121212;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+      }
+      input,
+      button {
+        padding: 0.5rem;
+        margin: 0.5rem;
+        font-size: 1rem;
+      }
+      video {
+        width: 90%;
+        max-width: 720px;
+        margin-top: 1rem;
+        background: black;
+      }
+      .id-box {
+        font-size: 1.2rem;
+        color: #00ffcc;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebRTC Screen Share</h1>
+
+    <div id="share">
+      <button onclick="startShare()">Start Sharing</button>
+      <div class="id-box" id="my-id"></div>
+    </div>
+
+    <hr />
+
+    <div id="view">
+      <input type="text" id="remote-id" placeholder="Enter Screen ID" />
+      <button onclick="startView()">View Screen</button>
+    </div>
+
+    <video id="video" autoplay playsinline></video>
+
+    <script>
+      let peer;
+      let call;
+
+      function startShare() {
+        peer = new Peer(); // random ID
+        peer.on("open", (id) => {
+          document.getElementById("my-id").textContent =
+            "Your screen ID: " + id;
+        });
+
+        navigator.mediaDevices
+          .getDisplayMedia({ video: true, audio: false })
+          .then((stream) => {
+            peer.on("call", (incomingCall) => {
+              incomingCall.answer(stream); // viewer calls, sharer sends stream
+            });
+          });
+      }
+
+      function startView() {
+        const remoteId = document.getElementById("remote-id").value;
+        peer = new Peer(); // viewer
+
+        peer.on("open", () => {
+          call = peer.call(remoteId, null);
+          call.on("stream", (stream) => {
+            const video = document.getElementById("video");
+            video.srcObject = stream;
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
