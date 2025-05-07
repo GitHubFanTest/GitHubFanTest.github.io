@@ -52,7 +52,13 @@
       let call;
 
       function startShare() {
-        peer = new Peer(); // random ID
+        if (peer) {
+          peer.destroy();
+        }
+        peer = new Peer({
+          debug: 2, // This will help us see what's happening
+        });
+
         peer.on("open", (id) => {
           document.getElementById("my-id").textContent =
             "Your screen ID: " + id;
@@ -61,12 +67,12 @@
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: false })
           .then((stream) => {
-            // Show screen locally
             const video = document.getElementById("video");
             video.srcObject = stream;
 
             peer.on("call", (incomingCall) => {
-              incomingCall.answer(stream); // viewer calls, sharer sends stream
+              console.log("Receiving call...");
+              incomingCall.answer(stream);
             });
           })
           .catch((error) => {
@@ -82,13 +88,26 @@
           return;
         }
 
-        peer = new Peer(); // viewer
+        if (peer) {
+          peer.destroy();
+        }
+        peer = new Peer({
+          debug: 2,
+        });
 
         peer.on("open", () => {
-          call = peer.call(remoteId, null);
-          call.on("stream", (stream) => {
+          console.log("Connecting to:", remoteId);
+          call = peer.call(remoteId, new MediaStream()); // Send empty stream
+
+          call.on("stream", (remoteStream) => {
+            console.log("Received stream");
             const video = document.getElementById("video");
-            video.srcObject = stream;
+            video.srcObject = remoteStream;
+          });
+
+          call.on("error", (err) => {
+            console.error("Call error:", err);
+            alert("Call failed. Please check the ID and try again.");
           });
         });
 
