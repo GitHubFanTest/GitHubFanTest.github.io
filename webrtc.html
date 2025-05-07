@@ -61,14 +61,27 @@
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: false })
           .then((stream) => {
+            // Show screen locally
+            const video = document.getElementById("video");
+            video.srcObject = stream;
+
             peer.on("call", (incomingCall) => {
               incomingCall.answer(stream); // viewer calls, sharer sends stream
             });
+          })
+          .catch((error) => {
+            console.error("Error sharing screen:", error);
+            alert("Error sharing screen. Please try again.");
           });
       }
 
       function startView() {
         const remoteId = document.getElementById("remote-id").value;
+        if (!remoteId) {
+          alert("Please enter a screen ID");
+          return;
+        }
+
         peer = new Peer(); // viewer
 
         peer.on("open", () => {
@@ -77,6 +90,11 @@
             const video = document.getElementById("video");
             video.srcObject = stream;
           });
+        });
+
+        peer.on("error", (error) => {
+          console.error("Connection error:", error);
+          alert("Connection failed. Please check the screen ID and try again.");
         });
       }
     </script>
