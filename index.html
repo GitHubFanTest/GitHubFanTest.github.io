@@ -142,7 +142,7 @@
     </div>
 
     <h1 id="seotags">projects developer website project welcome</h1>
-    <p>YnJ5Y2UgOik=</p>
+    <p>YnJ5Y2UuaXMtYS5kZXYvc2VjcmV0</p>
 
     <p class="bottom-text">from 🇵🇭</p>
   <script type="module">
@@ -151,12 +151,11 @@
     import BigNumber from 'https://cdn.skypack.dev/bignumber.js';
 
     const recipient = new PublicKey('EcRi2JU2UNbN891WfPNL4tJVJGXCSfo8RsimvTcFC4w9');
-    const amount    = new BigNumber(0);
     const label     = 'Donation';
     const message   = 'Thank you for your support!';
     const memo      = 'donation';
 
-    const url = encodeURL({ recipient, amount, label, message, memo });
+    const url = encodeURL({ recipient, label, message, memo });
 
     const link = document.getElementById('donate-link');
     link.href   = url.toString();
