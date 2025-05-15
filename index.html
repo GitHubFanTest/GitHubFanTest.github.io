@@ -46,13 +46,13 @@
   <meta name="msvalidate.01" content="242BA9696E4322440829233778F8B379" />
   </head>
   <body>
-    <!-- semi-transparent grey bar with donate button -->
-<div style="background: rgba(128, 128, 128, 0.55); padding: 16px; border-radius: 12px; text-align: center;">
-  <a href="solana:EcRi2JU2UNbN891WfPNL4tJVJGXCSfo8RsimvTcFC4w9" 
-     style="display:inline-block; padding:12px 24px; background:#00ffa3; color:#000; font-weight:bold; text-decoration:none; border-radius:8px; font-family:sans-serif;">
-    donate sol
-  </a>
-</div>
+    <div id="donate-bar" style="background: rgba(128, 128, 128, 0.55); padding: 16px; border-radius: 12px; text-align: center;">
+    <a id="donate-link"
+       href="#"
+       style="display:inline-block; padding:12px 24px; background:#00ffa3; color:#000; font-weight:bold; text-decoration:none; border-radius:8px; font-family:sans-serif;">
+      donate sol
+    </a>
+  </div>
     <h1>Welcome to My Portfolio</h1>
     <p>
       Hi, I'm Bryce! I'm a developer who loves coding and building cool
@@ -145,5 +145,22 @@
     <p>YnJ5Y2UgOik=</p>
 
     <p class="bottom-text">from 🇵🇭</p>
+  <script type="module">
+    import { encodeURL } from 'https://cdn.skypack.dev/@solana/pay';
+    import { PublicKey } from 'https://cdn.skypack.dev/@solana/web3.js';
+    import BigNumber from 'https://cdn.skypack.dev/bignumber.js';
+
+    const recipient = new PublicKey('EcRi2JU2UNbN891WfPNL4tJVJGXCSfo8RsimvTcFC4w9');
+    const amount    = new BigNumber(0);
+    const label     = 'Donation';
+    const message   = 'Thank you for your support!';
+    const memo      = 'donation';
+
+    const url = encodeURL({ recipient, amount, label, message, memo });
+
+    const link = document.getElementById('donate-link');
+    link.href   = url.toString();
+    link.target = '_blank';
+  </script>
   </body>
 </html>
