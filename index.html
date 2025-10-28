@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-T4K0VKTYV8"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-T4K0VKTYV8");
-    </script>
     <meta charset="UTF-8" />
     <meta
       name="description"
@@ -22,19 +8,35 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bryce's Portfolio</title>
+    <link rel="icon" href="favicon.ico" />
     <link rel="preload" href="styles.css" as="style" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="favicon.ico" />
+
+    <!-- Google tag -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4K0VKTYV8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-T4K0VKTYV8");
+    </script>
+
+    <!-- Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "rjx29m3b26");
+    </script>
+
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Bryce",
         "jobTitle": "Software Developer",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "Coder Inc"
-        },
+        "worksFor": { "@type": "Organization", "name": "Coder Inc" },
         "url": "https://bryce.is-a.dev",
         "sameAs": [
           "https://github.com/GitHubFanTest",
@@ -43,117 +45,81 @@
         "gender": "Male"
       }
     </script>
-  <meta name="msvalidate.01" content="242BA9696E4322440829233778F8B379" />
-  <!-- Clarity tracking code for https://bryce.is-a.dev -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "rjx29m3b26");
-</script>
   </head>
   <body>
-    <h1>Welcome to My Portfolio</h1>
-    <p>
-      Hi, I'm Bryce! I'm a developer who loves coding and building cool
-      projects.
-    </p>
-    <p>I will add some more features to this website later.</p>
+    <header>
+      <h1 class="glow">bryce.is-a.dev</h1>
+      <p class="subtitle">developer • creator • builder</p>
+    </header>
 
-    <a href="https://bryce.is-a.dev/calculator"
-      >Check out my awesome calculator here!</a
-    >
+    <main>
+      <section class="intro">
+        <p>hey, i'm bryce — a passionate developer who loves coding and building cool projects. welcome to my world of tech and creativity!</p>
+        <a href="https://bryce.is-a.dev/calculator" class="neon-btn">try my calculator</a>
+      </section>
 
-    <div class="dropdown">
-      <button class="dropbtn">About Me</button>
-      <div class="dropdown-content">
-        <p>
-          I'm a passionate developer with experience in various programming
-          languages, game development, and AI. I enjoy working on innovative
-          projects and always strive to learn new technologies.
-        </p>
-      </div>
-    </div>
+      <section class="dropdowns">
+        <details>
+          <summary>👤 about me</summary>
+          <p>i’m a developer with experience in various programming languages, game dev, and ai. i enjoy creating innovative projects and always learning new tech.</p>
+        </details>
 
-    <div class="dropdown">
-      <button class="dropbtn">My Projects</button>
-      <div class="dropdown-content">
-        <a href="/hershey">Hershey's Website</a>
-        <a href="#">Project 2</a>
-        <a href="#">Project 3</a>
-      </div>
-    </div>
+        <details>
+          <summary>💾 my projects</summary>
+          <a href="/hershey">hershey’s website</a>
+          <a href="#">project 2</a>
+          <a href="#">project 3</a>
+        </details>
 
-    <div class="github-stats-container">
-      <img
-        src="https://github-readme-stats.vercel.app/api?username=GitHubFanTest&show_icons=true&theme=dark"
-        loading="lazy"
-        alt="GitHub Stats"
-        name="github-stats"
-      />
-    </div>
-    <div class="dropdown">
-      <button class="dropbtn">My Socials</button>
-      <div class="dropdown-content">
-        <p>
+        <details>
+          <summary>📊 github stats</summary>
+          <img
+            src="https://github-readme-stats.vercel.app/api?username=GitHubFanTest&show_icons=true&theme=tokyonight"
+            loading="lazy"
+            alt="GitHub Stats"
+          />
+        </details>
+
+        <details>
+          <summary>🌐 socials</summary>
           <a href="https://github.com/GitHubFanTest" target="_blank">
-            <img
-              src="https://cdn.simpleicons.org/github/FFFFFF"
-              loading="lazy"
-              alt="GitHub"
-              width="30"
-              style="
-                display: inline-block;
-                vertical-align: middle;
-                margin-right: 5px;
-              "
-            />
-            GitHub
+            <img src="https://cdn.simpleicons.org/github/00FFFF" width="24" /> github
           </a>
-        </p>
-        <p>
           <a href="https://youtube.com/@BloxyBryceYT" target="_blank">
-            <img
-              src="https://cdn.simpleicons.org/youtube/FFFFFF"
-              loading="lazy"
-              alt="YouTube"
-              width="30"
-              style="
-                display: inline-block;
-                vertical-align: middle;
-                margin-right: 5px;
-              "
-            />
-            YouTube
+            <img src="https://cdn.simpleicons.org/youtube/FF00FF" width="24" /> youtube
           </a>
-        </p>
-      </div>
-    </div>
+        </details>
 
-    <div class="dropdown">
-      <button class="dropbtn">Food List</button>
-      <div class="dropdown-content">
-        <p>1. Carbonara with garlic bread</p>
-        <p>2. Carbonara</p>
-        <p>3. Cheese</p>
-        <p>4. Bacon</p>
-        <p>5. Iced tea</p>
-      </div>
-    </div>
-<form action="https://usebasin.com/f/fe402d2c852a" method="POST" enctype="multipart/form-data" id="form" >
-  <h1>Contact me!</h1>
-  <label for="name">Name</label>
-  <input type="text" name="name" />
-  <label for="email">Email</label>
-  <input type="email" name="email" required />
-  <label for="name">Content</label>
-  <input type="text" name="content" required />
-  <button type="submit">Send</button>
-</form>
-  <h1 id="seotags">projects developer website project welcome</h1>
-  <p>YnJ5Y2UuaXMtYS5kZXYvc2VjcmV0</p>
-    <p class="bottom-text">from 🇵🇭</p>
-  </script>
+        <details>
+          <summary>🍝 food list</summary>
+          <ul>
+            <li>carbonara with garlic bread</li>
+            <li>carbonara</li>
+            <li>cheese</li>
+            <li>bacon</li>
+            <li>iced tea</li>
+          </ul>
+        </details>
+      </section>
+
+      <section class="contact">
+        <h2>contact me</h2>
+        <form
+          action="https://usebasin.com/f/fe402d2c852a"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label for="name">name</label>
+          <input type="text" name="name" required />
+          <label for="email">email</label>
+          <input type="email" name="email" required />
+          <label for="content">message</label>
+          <textarea name="content" required></textarea>
+          <button type="submit" class="neon-btn">send</button>
+        </form>
+      </section>
+
+      <p class="bottom-text">love from 🇵🇭</p>
+    </main>
   </body>
 </html>
