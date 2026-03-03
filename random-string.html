@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random String Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    #randomString {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Random String Generator</h1>
+  <button id="generateBtn">Generate Random String</button>
+  <div id="randomString">Click the button to get a random string!</div>
+
+  <script>
+    const API = "https://backend-x4zn.onrender.com/";
+
+    async function getRandomString() {
+      try {
+        const response = await fetch(`${API}/random-string`);
+        const data = await response.json();
+        document.getElementById("randomString").textContent = data.random;
+      } catch (err) {
+        document.getElementById("randomString").textContent = "Error fetching string!";
+        console.error(err);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", getRandomString);
+  </script>
+
+</body>
+</html>
