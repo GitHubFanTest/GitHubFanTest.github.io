@@ -5,33 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random String Generator</title>
   <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 50px;
-    }
-    #randomString {
-      font-size: 1.5rem;
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: 2px solid #333;
-      border-radius: 5px;
-      background-color: #f0f0f0;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background-color: #333;
-      color: #fff;
-    }
-    button:hover {
-      background-color: #555;
-    }
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+    #randomString { font-size: 1.5rem; margin-top: 20px; padding: 10px 20px; border: 2px solid #333; border-radius: 5px; background-color: #f0f0f0; }
+    button { padding: 10px 20px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; background-color: #333; color: #fff; }
+    button:hover { background-color: #555; }
   </style>
 </head>
 <body>
@@ -41,7 +18,7 @@
   <div id="randomString">Click the button to get a random string!</div>
 
   <script>
-    const API = "https://backend-x4zn.onrender.com";
+    const API = "https://backend-x4zn.onrender.com"; // use your Render API URL, no trailing slash
 
     async function getRandomString() {
       try {
