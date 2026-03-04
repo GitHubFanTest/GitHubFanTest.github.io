@@ -10,6 +10,7 @@
     button { padding: 10px 20px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; background-color: #333; color: #fff; }
     button:hover { background-color: #555; }
   </style>
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -18,8 +19,6 @@
   <div id="randomString">Click the button to get a random string!</div>
 
   <script>
-    const API = "https://backend-x4zn.onrender.com"; // use your Render API URL, no trailing slash
-
     async function getRandomString() {
       try {
         const response = await fetch(`${API}/random-string`);
