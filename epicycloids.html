@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating Points Simulator</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; background: #1a1a1a; color: white; margin: 0; overflow: hidden; }
+        canvas { background: #000; box-shadow: 0 0 20px rgba(0,0,0,0.5); cursor: crosshair; }
+        .controls { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; max-width: 250px; z-index: 10; }
+        .point-item { border-bottom: 1px solid #444; padding: 5px 0; margin-bottom: 5px; font-size: 12px; }
+        button { background: #4CAF50; border: none; color: white; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        button.clear { background: #f44336; }
+        label { display: block; margin-top: 5px; }
+        input { width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h3>Point Simulator</h3>
+    <p style="font-size: 11px;">Add points to create connected rotating arms.</p>
+    <div id="points-list"></div>
+    <button onclick="addPoint()">+ Add Point</button>
+    <button class="clear" onclick="clearCanvas()">Clear Trace</button>
+    <button style="background:#2196F3" onclick="resetPoints()">Reset All</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const pointsList = document.getElementById('points-list');
+
+    let arms = [
+        { length: 100, speed: 0.02, angle: 0 },
+        { length: 50, speed: 0.05, angle: 0 }
+    ];
+    
+    let path = [];
+    const maxPathLength = 2000;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.onresize = resize;
+    resize();
+
+    function addPoint() {
+        arms.push({
+            length: Math.random() * 50 + 20,
+            speed: (Math.random() - 0.5) * 0.2,
+            angle: 0
+        });
+        updateUI();
+    }
+
+    function resetPoints() {
+        arms = [];
+        path = [];
+        updateUI();
+    }
+
+    function clearCanvas() {
+        path = [];
+    }
+
+    function updateUI() {
+        pointsList.innerHTML = '';
+        arms.forEach((arm, i) => {
+            const div = document.createElement('div');
+            div.className = 'point-item';
+            div.innerHTML = `
+                <b>Arm ${i + 1}</b>
+                <label>Length: <input type="range" min="10" max="200" value="${arm.length}" oninput="arms[${i}].length = +this.value; path=[]"></label>
+                <label>Speed: <input type="range" min="-0.2" max="0.2" step="0.01" value="${arm.speed}" oninput="arms[${i}].speed = +this.value; path=[]"></label>
+            `;
+            pointsList.appendChild(div);
+        });
+    }
+
+    function draw() {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        let currentX = canvas.width / 2;
+        let currentY = canvas.height / 2;
+
+        // Draw Arms
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        
+        arms.forEach(arm => {
+            const nextX = currentX + Math.cos(arm.angle) * arm.length;
+            const nextY = currentY + Math.sin(arm.angle) * arm.length;
+            
+            ctx.beginPath();
+            ctx.moveTo(currentX, currentY);
+            ctx.lineTo(nextX, nextY);
+            ctx.stroke();
+            
+            // Draw joint
+            ctx.fillStyle = '#2196F3';
+            ctx.beginPath();
+            ctx.arc(nextX, nextY, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            currentX = nextX;
+            currentY = nextY;
+            arm.angle += arm.speed;
+        });
+
+        // Record path of the last point
+        path.push({x: currentX, y: currentY});
+        if (path.length > maxPathLength) path.shift();
+
+        // Draw Path (the "Sun" shape)
+        ctx.strokeStyle = '#00ffcc';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = 0; i < path.length; i++) {
+            ctx.lineTo(path[i].x, path[i].y);
+        }
+        ctx.stroke();
+
+        requestAnimationFrame(draw);
+    }
+
+    updateUI();
+    draw();
+</script>
+</body>
+</html>
