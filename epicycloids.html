@@ -7,23 +7,32 @@
     <style>
         body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; background: #1a1a1a; color: white; margin: 0; overflow: hidden; }
         canvas { background: #000; box-shadow: 0 0 20px rgba(0,0,0,0.5); cursor: crosshair; }
-        .controls { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; max-width: 250px; z-index: 10; }
-        .point-item { border-bottom: 1px solid #444; padding: 5px 0; margin-bottom: 5px; font-size: 12px; }
-        button { background: #4CAF50; border: none; color: white; padding: 8px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .controls { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 8px; width: 220px; z-index: 10; max-height: 90vh; overflow-y: auto; border: 1px solid #333; }
+        .point-item { border-bottom: 1px solid #444; padding: 10px 0; margin-bottom: 5px; font-size: 12px; }
+        button { background: #4CAF50; border: none; color: white; padding: 10px; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 8px; font-weight: bold; }
         button.clear { background: #f44336; }
-        label { display: block; margin-top: 5px; }
-        input { width: 100%; }
+        button#pauseBtn { background: #ff9800; }
+        button#pauseBtn.paused { background: #4CAF50; }
+        label { display: block; margin-top: 8px; font-size: 11px; color: #bbb; }
+        input { width: 100%; accent-color: #2196F3; }
+        h3 { margin-top: 0; color: #2196F3; }
     </style>
 </head>
 <body>
 
 <div class="controls">
-    <h3>Point Simulator</h3>
-    <p style="font-size: 11px;">Add points to create connected rotating arms.</p>
-    <div id="points-list"></div>
-    <button onclick="addPoint()">+ Add Point</button>
+    <h3>Simulator</h3>
+    
+    <button id="pauseBtn" onclick="togglePause()">Pause (Space)</button>
     <button class="clear" onclick="clearCanvas()">Clear Trace</button>
-    <button style="background:#2196F3" onclick="resetPoints()">Reset All</button>
+    
+    <label>Trail Length: <input type="range" min="10" max="5000" value="2000" oninput="maxPathLength = +this.value"></label>
+    
+    <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+    
+    <div id="points-list"></div>
+    <button onclick="addPoint()">+ Add New Arm</button>
+    <button style="background:#555" onclick="resetPoints()">Reset All</button>
 </div>
 
 <canvas id="canvas"></canvas>
@@ -32,14 +41,17 @@
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const pointsList = document.getElementById('points-list');
+    const pauseBtn = document.getElementById('pauseBtn');
 
     let arms = [
-        { length: 100, speed: 0.02, angle: 0 },
-        { length: 50, speed: 0.05, angle: 0 }
+        { length: 80, speed: 0.02, angle: 0 },
+        { length: 60, speed: 0.05, angle: 0 },
+        { length: 40, speed: -0.1, angle: 0 }
     ];
     
     let path = [];
-    const maxPathLength = 2000;
+    let maxPathLength = 2000;
+    let isPaused = false;
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -48,10 +60,25 @@
     window.onresize = resize;
     resize();
 
+    // Pause logic
+    function togglePause() {
+        isPaused = !isPaused;
+        pauseBtn.innerText = isPaused ? "Resume (Space)" : "Pause (Space)";
+        pauseBtn.classList.toggle('paused', isPaused);
+    }
+
+    // Keyboard shortcut for pause
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            togglePause();
+        }
+    });
+
     function addPoint() {
         arms.push({
             length: Math.random() * 50 + 20,
-            speed: (Math.random() - 0.5) * 0.2,
+            speed: (Math.random() - 0.5) * 0.15,
             angle: 0
         });
         updateUI();
@@ -73,9 +100,14 @@
             const div = document.createElement('div');
             div.className = 'point-item';
             div.innerHTML = `
-                <b>Arm ${i + 1}</b>
-                <label>Length: <input type="range" min="10" max="200" value="${arm.length}" oninput="arms[${i}].length = +this.value; path=[]"></label>
-                <label>Speed: <input type="range" min="-0.2" max="0.2" step="0.01" value="${arm.speed}" oninput="arms[${i}].speed = +this.value; path=[]"></label>
+                <div style="display:flex; justify-content:space-between">
+                    <b>Arm ${i + 1}</b>
+                    <span style="cursor:pointer; color:#f44336" onclick="arms.splice(${i},1); updateUI(); path=[]">✖</span>
+                </div>
+                <label>Length</label>
+                <input type="range" min="5" max="250" value="${arm.length}" oninput="arms[${i}].length = +this.value; path=[]">
+                <label>Speed</label>
+                <input type="range" min="-0.3" max="0.3" step="0.001" value="${arm.speed}" oninput="arms[${i}].speed = +this.value; path=[]">
             `;
             pointsList.appendChild(div);
         });
@@ -88,42 +120,50 @@
         let currentX = canvas.width / 2;
         let currentY = canvas.height / 2;
 
-        // Draw Arms
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.lineWidth = 2;
-        
-        arms.forEach(arm => {
+        // Draw Arms and Calculate Positions
+        arms.forEach((arm, i) => {
             const nextX = currentX + Math.cos(arm.angle) * arm.length;
             const nextY = currentY + Math.sin(arm.angle) * arm.length;
             
+            // Draw visual arm
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(currentX, currentY);
             ctx.lineTo(nextX, nextY);
             ctx.stroke();
             
             // Draw joint
-            ctx.fillStyle = '#2196F3';
+            ctx.fillStyle = i === arms.length - 1 ? '#00ffcc' : '#2196F3';
             ctx.beginPath();
             ctx.arc(nextX, nextY, 3, 0, Math.PI * 2);
             ctx.fill();
 
             currentX = nextX;
             currentY = nextY;
-            arm.angle += arm.speed;
+            
+            if (!isPaused) {
+                arm.angle += arm.speed;
+            }
         });
 
         // Record path of the last point
-        path.push({x: currentX, y: currentY});
-        if (path.length > maxPathLength) path.shift();
-
-        // Draw Path (the "Sun" shape)
-        ctx.strokeStyle = '#00ffcc';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        for (let i = 0; i < path.length; i++) {
-            ctx.lineTo(path[i].x, path[i].y);
+        if (!isPaused) {
+            path.push({x: currentX, y: currentY});
+            while (path.length > maxPathLength) path.shift();
         }
-        ctx.stroke();
+
+        // Draw the Trace
+        if (path.length > 1) {
+            ctx.strokeStyle = '#00ffcc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x, path[i].y);
+            }
+            ctx.stroke();
+        }
 
         requestAnimationFrame(draw);
     }
