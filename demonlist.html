@@ -1,51 +1,320 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Malwareking GDPS Demonlist</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  color:white;
-  background:black;
-  min-height:100vh;
- background: radial-gradient(circle at center, #3a3a3a 0%, #1a1a1a 35%, #000000 75%);
-}header{ padding:16px; background:#111; font-size:22px; font-weight:bold; border-bottom:1px solid #444; }
+:root {
+  --red: #ff2222;
+  --red-dim: #991111;
+  --red-glow: rgba(255,34,34,0.18);
+  --bg: #0a0a0a;
+  --card: #111111;
+  --card-border: #2a0000;
+  --text: #f0e8e8;
+  --muted: #888;
+}
 
-.section{ padding:20px; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-.card{ background:#2b2b2b; padding:15px; border-radius:12px; margin-bottom:10px; box-shadow:0 0 20px rgba(200,200,200,0.15); }
+body {
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
 
-.rank{ font-weight:bold; color:#cfcfcf; font-size:18px; }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,34,34,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,34,34,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+  animation: gridPan 20s linear infinite;
+}
 
-.diff{ opacity:0.8; margin-top:4px; } </style>
+@keyframes gridPan {
+  from { background-position: 0 0; }
+  to { background-position: 48px 48px; }
+}
 
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, #0a0a0a 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+header {
+  position: relative;
+  z-index: 10;
+  padding: 28px 36px 20px;
+  border-bottom: 1px solid #2a0000;
+  background: linear-gradient(180deg, #160000 0%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.header-skull {
+  font-size: 40px;
+  line-height: 1;
+  filter: drop-shadow(0 0 12px var(--red));
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px var(--red)); }
+  50% { filter: drop-shadow(0 0 22px var(--red)); }
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.site-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 30px var(--red), 0 0 60px rgba(255,34,34,0.3);
+}
+
+.sub {
+  font-size: 13px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 600;
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  padding: 36px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 8px;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 3px;
+  color: #fff;
+  margin-bottom: 28px;
+  line-height: 1;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--red) 0%, transparent 70%);
+  margin-bottom: 28px;
+  opacity: 0.4;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-left: 3px solid var(--red);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  transition: 0.2s;
+  animation: cardIn 0.5s ease both;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.card:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 24px var(--red-glow);
+  transform: translateX(4px);
+}
+
+.rank-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: rgba(255,34,34,0.06);
+  border-right: 1px solid #2a0000;
+  padding: 20px 0;
+}
+
+.rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: var(--red);
+}
+
+.card-body {
+  padding: 16px 20px;
+}
+
+.card-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.diff-badge {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 2px;
+  border: 1px solid;
+}
+
+.diff-insane {
+  color: #ff44aa;
+  border-color: #ff44aa44;
+  background: rgba(255,68,170,0.08);
+}
+
+.diff-harder {
+  color: #ffaa22;
+  border-color: #ffaa2244;
+  background: rgba(255,170,34,0.08);
+}
+
+.diff-hard {
+  color: #ff6622;
+  border-color: #ff662244;
+  background: rgba(255,102,34,0.08);
+}
+
+.diff-extreme {
+  color: var(--red);
+  border-color: #ff222244;
+  background: rgba(255,34,34,0.08);
+}
+
+.diff-default {
+  color: #aaa;
+  border-color: #aaa4;
+  background: rgba(170,170,170,0.08);
+}
+
+.card-arrow {
+  padding: 0 20px;
+  color: #3a1010;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+</style>
 </head>
-<body><header>Malwareking GDPS Demonlist</header><div class="section">
-<h2>Demonlist</h2>
-<div id="listContainer"></div>
-</div><script>
-let demons = [
-  {name:"Remade Steel", difficulty:"Insane"},
-  {name:"Techno Reactor", difficulty:"Harder"},
-  {name:"Techno Reactor MKFID", difficulty:"Harder"}
+
+<body>
+<header>
+  <div class="header-skull">💀</div>
+  <div class="header-title">
+    <span class="site-name">Malwareking GDPS</span>
+    <span class="sub">Demonlist</span>
+  </div>
+</header>
+
+<div class="section">
+  <div class="section-label">// ranked</div>
+  <div class="section-title">Demon List</div>
+  <div class="divider"></div>
+  <div id="listContainer"></div>
+</div>
+
+<script>
+const demons = [
+  { name: "Remade Steel", difficulty: "Insane" },
+  { name: "Techno Reactor", difficulty: "Harder" },
+  { name: "Techno Reactor MKFID", difficulty: "Harder" }
 ];
 
-function renderList(){
- let el = document.getElementById("listContainer");
- el.innerHTML = "";
- 
- demons.forEach((d,i)=>{
-   el.innerHTML += `
-   <div class="card">
-     <div class="rank">#${i+1}</div>
-     <div><b>${d.name}</b></div>
-     <div class="diff">${d.difficulty}</div>
-   </div>`;
- });
+function getDiffClass(d) {
+  const map = {
+    insane: "diff-insane",
+    harder: "diff-harder",
+    hard: "diff-hard",
+    extreme: "diff-extreme"
+  };
+
+  return map[d.toLowerCase()] || "diff-default";
+}
+
+function renderList() {
+  const el = document.getElementById("listContainer");
+
+  if (!demons.length) {
+    el.innerHTML = '<div class="empty-state">No demons listed yet</div>';
+    return;
+  }
+
+  el.innerHTML = demons.map((d, i) => `
+    <div class="card">
+      <div class="rank-box">
+        <span class="rank">#${i + 1}</span>
+      </div>
+
+      <div class="card-body">
+        <div class="card-name">${d.name}</div>
+        <span class="diff-badge ${getDiffClass(d.difficulty)}">${d.difficulty}</span>
+      </div>
+
+      <div class="card-arrow">›</div>
+    </div>
+  `).join("");
 }
 
 renderList();
-</script></body>
+</script>
+</body>
 </html>
