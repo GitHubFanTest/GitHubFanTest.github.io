@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Surprise Button</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #111;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  button {
+    margin-top: 100px;
+    padding: 20px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00c6ff;
+  }
+
+  #sign {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    padding: 20px 40px;
+    border-radius: 12px;
+    border: 2px solid #00c6ff;
+    cursor: pointer;
+    transition: top 1s ease-out;
+    font-size: 18px;
+  }
+
+  #sign.show {
+    top: 200px;
+  }
+</style>
+</head>
+<body>
+
+<button onclick="dropSign()">PRESS THIS BUTTON FOR A SURPRISE :)</button>
+
+<div id="sign" onclick="nothing()">
+  CLICK ME 😏
+</div>
+
+<script>
+  function dropSign() {
+    document.getElementById("sign").classList.add("show");
+  }
+
+  function nothing() {
+    alert("This button does absolutely nothing ;)");
+  }
+</script>
+
+</body>
+</html>
