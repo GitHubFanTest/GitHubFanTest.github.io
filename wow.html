@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Stickman Fighter Mobile</title>
+<style>
+body { margin:0; background:#0d0d0d; overflow:hidden; font-family:sans-serif; }
+canvas { display:block; }
+
+#ui {
+  position:absolute;
+  top:10px; left:10px;
+  color:white;
+  font-size:14px;
+}
+
+/* Mobile Controls */
+.btn {
+  position:absolute;
+  width:70px; height:70px;
+  background:rgba(255,255,255,0.1);
+  border:2px solid white;
+  border-radius:15px;
+  color:white;
+  font-size:20px;
+  text-align:center;
+  line-height:70px;
+  user-select:none;
+}
+
+#left { bottom:20px; left:20px; }
+#right { bottom:20px; left:110px; }
+#jump { bottom:100px; right:20px; }
+#punch { bottom:20px; right:110px; }
+#kick { bottom:20px; right:20px; }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="ui">
+<b>CONTROLS</b><br>
+Move: Left/Right buttons<br>
+Jump: ↑<br>
+Punch: P<br>
+Kick: K
+</div>
+
+<!-- Buttons -->
+<div class="btn" id="left">◀</div>
+<div class="btn" id="right">▶</div>
+<div class="btn" id="jump">↑</div>
+<div class="btn" id="punch">P</div>
+<div class="btn" id="kick">K</div>
+
+<script>
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
+c.width = innerWidth;
+c.height = innerHeight;
+
+// Touch state
+const touch = {
+  left:false, right:false, jump:false, punch:false, kick:false
+};
+
+// Attach touch events
+["left","right","jump","punch","kick"].forEach(id=>{
+  const el = document.getElementById(id);
+
+  el.ontouchstart = e => { e.preventDefault(); touch[id]=true; }
+  el.ontouchend = e => { e.preventDefault(); touch[id]=false; }
+});
+
+// Keyboard fallback
+const keys = {};
+onkeydown = e => keys[e.key.toLowerCase()] = true;
+onkeyup = e => keys[e.key.toLowerCase()] = false;
+
+class Stickman {
+  constructor(x, color) {
+    this.x = x;
+    this.y = 400;
+    this.vx = 0;
+    this.vy = 0;
+    this.color = color;
+    this.health = 100;
+    this.facing = 1;
+    this.cool = 0;
+  }
+
+  update() {
+    this.vy += 0.6;
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.y > 400) {
+      this.y = 400;
+      this.vy = 0;
+    }
+
+    this.cool--;
+  }
+
+  draw() {
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 4;
+
+    let head = this.y - 60;
+    let body = this.y - 20;
+
+    // head
+    ctx.beginPath();
+    ctx.arc(this.x, head, 10, 0, Math.PI*2);
+    ctx.stroke();
+
+    // body
+    line(this.x, head+10, this.x, body);
+
+    // arms
+    let a = this.cool>0 ? 20 : 10;
+    line(this.x, body-10, this.x + this.facing*a, body);
+    line(this.x, body-10, this.x - this.facing*10, body);
+
+    // legs
+    line(this.x, body, this.x+this.facing*10, this.y);
+    line(this.x, body, this.x-this.facing*10, this.y);
+
+    // HP
+    ctx.fillStyle="red";
+    ctx.fillRect(this.x-30,this.y-90,60,5);
+    ctx.fillStyle="lime";
+    ctx.fillRect(this.x-30,this.y-90,60*(this.health/100),5);
+  }
+
+  punch(t) {
+    if(this.cool>0) return;
+    if(Math.abs(this.x-t.x)<70){
+      t.vx+=this.facing*6;
+      t.vy-=3;
+      t.health-=6;
+    }
+    this.cool=20;
+  }
+
+  kick(t) {
+    if(this.cool>0) return;
+    if(Math.abs(this.x-t.x)<90){
+      t.vx+=this.facing*10;
+      t.vy-=5;
+      t.health-=10;
+    }
+    this.cool=35;
+  }
+}
+
+function line(x1,y1,x2,y2){
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.lineTo(x2,y2);
+  ctx.stroke();
+}
+
+const player = new Stickman(200,"cyan");
+const enemy = new Stickman(700,"orange");
+
+function control() {
+  player.vx = 0;
+
+  if(keys["a"] || touch.left){
+    player.vx=-4; player.facing=-1;
+  }
+  if(keys["d"] || touch.right){
+    player.vx=4; player.facing=1;
+  }
+
+  if((keys["w"]||touch.jump) && player.y>=400){
+    player.vy=-12;
+  }
+
+  if(keys["j"]||touch.punch) player.punch(enemy);
+  if(keys["k"]||touch.kick) player.kick(enemy);
+}
+
+function ai(){
+  enemy.vx=0;
+  let d=enemy.x-player.x;
+
+  if(Math.abs(d)>60){
+    enemy.vx=d>0?-2.5:2.5;
+  }
+
+  enemy.facing=d>0?-1:1;
+
+  if(Math.abs(d)<80 && Math.random()<0.05) enemy.punch(player);
+  if(Math.abs(d)<100 && Math.random()<0.02) enemy.kick(player);
+}
+
+function drawGround(){
+  ctx.strokeStyle="#555";
+  ctx.beginPath();
+  ctx.moveTo(0,410);
+  ctx.lineTo(c.width,410);
+  ctx.stroke();
+}
+
+function loop(){
+  ctx.fillStyle="#0d0d0d";
+  ctx.fillRect(0,0,c.width,c.height);
+
+  drawGround();
+
+  control();
+  ai();
+
+  player.update();
+  enemy.update();
+
+  player.draw();
+  enemy.draw();
+
+  if(player.health<=0||enemy.health<=0){
+    ctx.fillStyle="white";
+    ctx.font="50px Arial";
+    ctx.fillText(
+      player.health<=0?"YOU LOSE":"YOU WIN",
+      c.width/2-150,200
+    );
+    return;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
