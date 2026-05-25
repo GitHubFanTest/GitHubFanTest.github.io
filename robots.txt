@@ -1,5 +1,12 @@
+# why are you reading? and who are u?
 User-agent: *
 Disallow: /images/
 Allow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
 
 Sitemap: https://bryce.is-a.dev/sitemap.xml
