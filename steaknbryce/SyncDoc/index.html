@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SyncDoc Workspace</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Include Marked.js to convert Markdown to HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body>
+    <!-- Header & Dashboard Bar -->
+    <header>
+      <div class="logo">🚀 SyncDoc Workspace</div>
+      <div id="user-status">Connecting to server...</div>
+    </header>
+
+    <main class="container">
+      <!-- TOP SECTION: Collaborative Markdown Editor -->
+      <section class="editor-section">
+        <div class="panel">
+          <div class="panel-header">Markdown Input</div>
+          <textarea
+            id="markdown-input"
+            placeholder="Type your markdown here... Use # Headers, **bold**, or *italics*!"
+          ></textarea>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Live Shared Preview</div>
+          <div id="html-preview" class="markdown-body"></div>
+        </div>
+      </section>
+
+      <!-- BOTTOM SECTION: Collaborative Kanban Board -->
+      <section class="kanban-section">
+        <h2>📋 Team Task Board</h2>
+        <div class="kanban-board">
+          <div
+            class="kanban-column"
+            id="col-todo"
+            ondragover="allowDrop(event)"
+            ondrop="drop(event, 'todo')"
+          >
+            <div class="column-header todo">To Do</div>
+            <div class="card-list" id="list-todo"></div>
+            <button class="add-btn" onclick="addNewCard('todo')">
+              + Add Task
+            </button>
+          </div>
+
+          <div
+            class="kanban-column"
+            id="col-doing"
+            ondragover="allowDrop(event)"
+            ondrop="drop(event, 'doing')"
+          >
+            <div class="column-header doing">In Progress</div>
+            <div class="card-list" id="list-doing"></div>
+            <button class="add-btn" onclick="addNewCard('doing')">
+              + Add Task
+            </button>
+          </div>
+
+          <div
+            class="kanban-column"
+            id="col-done"
+            ondragover="allowDrop(event)"
+            ondrop="drop(event, 'done')"
+          >
+            <div class="column-header done">Done</div>
+            <div class="card-list" id="list-done"></div>
+            <button class="add-btn" onclick="addNewCard('done')">
+              + Add Task
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
