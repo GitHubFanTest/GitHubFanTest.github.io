@@ -9,9 +9,8 @@
 <body>
 
   <main class="container">
-    <article class="doc-card">
+    <article class="tos-card">
       <header>
-        <span class="badge badge-privacy">Privacy</span>
         <h1>Privacy Policy for CasinoForge-Bot</h1>
         <p class="intro">
           Dewangga-crypto ("we", "us") operates CasinoForge-Bot. We care about your privacy and only collect the minimum data needed to run the bot.
@@ -20,9 +19,14 @@
 
       <section>
         <h2>1. Data We Collect</h2>
-        <ul class="data-list">
-          <li><strong>Discord User IDs:</strong> To save your casino balance, inventory, and stats.</li>
-          <li><strong>Server IDs:</strong> To remember bot settings or configurations for a specific server.</li>
+        <!-- Reusing your prohibited-list class style so the list cards render nicely with blue accents -->
+        <ul class="prohibited-list">
+          <li style="border-left-color: #58a6ff;">
+            <strong>Discord User IDs:</strong> To save your casino balance, inventory, and stats.
+          </li>
+          <li style="border-left-color: #58a6ff;">
+            <strong>Server IDs:</strong> To remember bot settings or configurations for a specific server.
+          </li>
         </ul>
       </section>
 
@@ -40,8 +44,8 @@
         </p>
       </section>
 
-      <footer>
-        <a href="terms.html" class="nav-link">View Terms of Service &rarr;</a>
+      <footer style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #30363d; text-align: right;">
+        <a href="tos.html" style="color: #58a6ff; text-decoration: none; font-size: 0.9rem; font-weight: 500;">View Terms of Service &rarr;</a>
       </footer>
     </article>
   </main>
