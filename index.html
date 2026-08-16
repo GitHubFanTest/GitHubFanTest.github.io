@@ -4,13 +4,27 @@
     <meta charset="UTF-8" />
     <meta
       name="description"
-      content="Bryce's Portfolio - A showcase of my projects and skills. Tags: projects developer website project welcome"
+      content="Bryce — developer building CasinoForge (a Discord bot) and a Geometry Dash audio-fingerprinting tool. Portfolio, projects, and contact."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bryce's Portfolio</title>
     <link rel="icon" href="favicon.ico" />
+    <link rel="canonical" href="https://bryce.is-a.dev/" />
     <link rel="preload" href="styles.css" as="style" />
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bryce's Portfolio" />
+    <meta property="og:description" content="Developer building CasinoForge (a Discord bot) and a Geometry Dash audio-fingerprinting tool." />
+    <meta property="og:image" content="https://bryce.is-a.dev/preview.png" />
+    <meta property="og:url" content="https://bryce.is-a.dev/" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bryce's Portfolio" />
+    <meta name="twitter:description" content="Developer building CasinoForge and a Geometry Dash audio-fingerprinting tool." />
+    <meta name="twitter:image" content="https://bryce.is-a.dev/preview.png" />
 
     <!-- Google tag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4K0VKTYV8"></script>
@@ -36,72 +50,110 @@
         "@type": "Person",
         "name": "Bryce",
         "jobTitle": "Software Developer",
-        "worksFor": { "@type": "Organization", "name": "Coder Inc" },
         "url": "https://bryce.is-a.dev",
         "sameAs": [
           "https://github.com/GitHubFanTest",
           "https://youtube.com/@BloxyBryceYT"
         ],
-        "gender": "Male"
+        "knowsAbout": [
+          "Python",
+          "Node.js",
+          "Kotlin",
+          "Web Development",
+          "Discord Bots",
+          "Audio Fingerprinting"
+        ]
       }
     </script>
   </head>
   <body>
+    <!-- header and for some reason i put this tagline -->
     <header>
-      <h1 class="glow">bryce.is-a.dev</h1>
-      <p class="subtitle">developer • creator • builder</p>
+      <h1>bryce</h1>
+      <p class="subtitle">philippines · builds stuff, breaks stuff, fixes it eventually</p>
     </header>
 
     <main>
+      <!-- intro, i hope this goes well -->
       <section class="intro">
-        <p>hey, i'm bryce — a passionate developer who loves coding and building cool projects. welcome to my world of tech and creativity!</p>
-        <a href="https://bryce.is-a.dev/calculator" class="neon-btn">try my calculator</a>
+        <p>
+          hey — i'm bryce. still in school, been coding for a while now.
+          right now i'm mostly heads-down on a discord bot called
+          <strong>CasinoForge</strong> and a shazam-style audio ID system
+          for Geometry Dash levels. i post the wins and the bugs.
+        </p>
+        <a href="https://bryce.is-a.dev/calculator" class="btn">try my calculator</a>
       </section>
 
-      <section class="dropdowns">
-        <details>
-          <summary>👤 about me</summary>
-          <p>i’m a developer with experience in various programming languages, game dev, and ai. i enjoy creating innovative projects and always learning new tech.</p>
-        </details>
+      <!-- projects ig -->
+      <section class="projects">
+        <h2>what i'm building</h2>
 
-        <details>
-          <summary>💾 my projects</summary>
-          <a href="/hershey">hershey’s website</a>
-          <a href="#">project 2</a>
-          <a href="#">project 3</a>
-        </details>
+        <div class="project-grid">
+          <article class="project-card">
+            <h3>CasinoForge</h3>
+            <p>
+              discord bot i'm co-building with a friend (shoutout iamsteak).
+              python + discord.py on the backend, postgres for persistence.
+              currently knee-deep in a <code>/dev-block</code> command and
+              tightening up restricted-user checks across the action
+              commands so people can't do stuff they shouldn't.
+            </p>
+          </article>
 
-        <details>
-          <summary>📊 github stats</summary>
-          <img
-            src="https://github-readme-stats.vercel.app/api?username=GitHubFanTest&show_icons=true&theme=tokyonight"
-            loading="lazy"
-            alt="GitHub Stats"
-          />
-        </details>
+          <article class="project-card">
+            <h3>GD song fingerprinting</h3>
+            <p>
+              shazam, but for geometry dash. takes a spectrogram of a clip,
+              picks out the peaks, hashes the constellation pattern
+              (sha1), and matches it against a database — same idea
+              shazam uses, just pointed at GD official + popular custom
+              level songs like Future Funk. still populating the db.
+            </p>
+          </article>
 
-        <details>
-          <summary>🌐 socials</summary>
-          <a href="https://github.com/GitHubFanTest" target="_blank">
-            <img src="https://cdn.simpleicons.org/github/00FFFF" width="24" /> github
-          </a>
-          <a href="https://youtube.com/@BloxyBryceYT" target="_blank">
-            <img src="https://cdn.simpleicons.org/youtube/FF00FF" width="24" /> youtube
-          </a>
-        </details>
-
-        <details>
-          <summary>🍝 food list</summary>
-          <ul>
-            <li>carbonara with garlic bread</li>
-            <li>carbonara</li>
-            <li>cheese</li>
-            <li>bacon</li>
-            <li>iced tea</li>
-          </ul>
-        </details>
+          <article class="project-card">
+            <h3>hershey's website</h3>
+            <p>a little site for one of my cats. yes, she has her own page.</p>
+            <a href="/hershey">visit →</a>
+          </article>
+        </div>
       </section>
 
+      <!-- github stats, i was bored when i made thid -->
+      <section class="stats">
+        <h2>github stats</h2>
+        <img
+          src="https://github-readme-stats.vercel.app/api?username=GitHubFanTest&show_icons=true&theme=tokyonight"
+          loading="lazy"
+          alt="GitHub Stats"
+        />
+      </section>
+
+      <!-- my socials -->
+      <section class="socials">
+        <h2>find me</h2>
+        <a href="https://github.com/GitHubFanTest" target="_blank">
+          <img src="https://cdn.simpleicons.org/github/e8e6e1" width="20" alt="" /> github
+        </a>
+        <a href="https://youtube.com/@BloxyBryceYT" target="_blank">
+          <img src="https://cdn.simpleicons.org/youtube/e8e6e1" width="20" alt="" /> youtube
+        </a>
+      </section>
+
+      <!-- food list: idk really why i made this but its fine -->
+      <section class="food">
+        <h2>current food rotation</h2>
+        <ul>
+          <li>carbonara with garlic bread</li>
+          <li>carbonara (no garlic bread, for when i'm in a rush)</li>
+          <li>cheese</li>
+          <li>bacon</li>
+          <li>iced tea</li>
+        </ul>
+      </section>
+
+      <!-- contact -->
       <section class="contact">
         <h2>contact me</h2>
         <form
@@ -110,16 +162,16 @@
           enctype="multipart/form-data"
         >
           <label for="name">name</label>
-          <input type="text" name="name" required />
+          <input type="text" name="name" id="name" required />
           <label for="email">email</label>
-          <input type="email" name="email" required />
+          <input type="email" name="email" id="email" required />
           <label for="content">message</label>
-          <textarea name="content" required></textarea>
-          <button type="submit" class="neon-btn">send</button>
+          <textarea name="content" id="content" required></textarea>
+          <button type="submit" class="btn">send</button>
         </form>
       </section>
 
       <p class="bottom-text">love from 🇵🇭</p>
     </main>
   </body>
-</html>
+</html>    
