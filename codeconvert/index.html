@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Convert — free dev conversion tools by Bryce</title>
+<meta name="description" content="Free, fast, no-signup code conversion tools. JSON to TypeScript and more, all running in your browser.">
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#12181f;
+    --border:#22292f;
+    --text:#c9d1d9;
+    --muted:#7d8590;
+    --accent:#5fd3a8;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--mono);
+    line-height:1.6;
+    padding:0 20px 60px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  header{padding:48px 0 24px;}
+  .crumb{color:var(--muted);font-size:13px;text-decoration:none;}
+  .crumb:hover{color:var(--accent);}
+  h1{
+    font-size:28px;
+    margin:14px 0 8px;
+    color:#fff;
+    font-weight:600;
+  }
+  p.lead{color:var(--muted);font-size:15px;margin:0 0 8px;max-width:60ch;}
+  .list{margin-top:28px;display:flex;flex-direction:column;gap:12px;}
+  a.tool{
+    display:block;
+    border:1px solid var(--border);
+    background:var(--panel);
+    border-radius:6px;
+    padding:16px 18px;
+    text-decoration:none;
+    color:var(--text);
+    transition:border-color .15s ease;
+  }
+  a.tool:hover{border-color:var(--accent);}
+  a.tool .name{color:#fff;font-size:15px;font-weight:600;}
+  a.tool .desc{color:var(--muted);font-size:13px;margin-top:4px;}
+  a.tool.soon{opacity:.45;pointer-events:none;}
+  footer{margin-top:48px;color:var(--muted);font-size:12px;}
+  footer a{color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="crumb" href="/">← bryce.is-a.dev</a>
+    <h1>code convert</h1>
+    <p class="lead">small, free tools that turn one format of code into another. runs entirely in your browser — nothing gets uploaded anywhere.</p>
+  </header>
+
+  <div class="list">
+    <a class="tool" href="./json-to-ts/">
+      <div class="name">JSON → TypeScript</div>
+      <div class="desc">paste a JSON object, get a clean TypeScript interface. handles nesting, arrays, and optional fields.</div>
+    </a>
+    <a class="tool soon" href="#">
+      <div class="name">JS → TypeScript (coming soon)</div>
+      <div class="desc">add type annotations to plain JavaScript.</div>
+    </a>
+    <a class="tool soon" href="#">
+      <div class="name">JSON → Python dataclass (coming soon)</div>
+      <div class="desc">turn a JSON response into a Python dataclass.</div>
+    </a>
+  </div>
+
+  <footer>
+    built by <a href="/">Bryce</a>. more tools added over time.
+  </footer>
+</div>
+</body>
+</html>
