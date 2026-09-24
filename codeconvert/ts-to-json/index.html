@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TypeScript to JSON Converter — Generate Mock JSON from an Interface</title>
+<meta name="description" content="Paste a TypeScript interface or type, get a matching sample JSON object instantly. Handles nested objects, arrays, and optional fields. Runs in your browser.">
+<link rel="canonical" href="https://bryce.is-a.dev/codeconvert/ts-to-json/">
+<meta property="og:title" content="TypeScript to JSON Converter">
+<meta property="og:description" content="Paste a TypeScript interface, get matching sample JSON instantly. Free, no signup, runs in your browser.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TypeScript to JSON Converter",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "description": "Free browser-based tool that generates sample JSON data matching a TypeScript interface or type, handling nested objects, arrays, and optional fields."
+}
+</script>
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#12181f;
+    --panel2:#0a0e13;
+    --border:#22292f;
+    --text:#c9d1d9;
+    --muted:#9aa1a8;
+    --accent:#5fd3a8;
+    --accent-dim:#3a8f6f;
+    --err:#e5534b;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--mono);
+    line-height:1.6;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px;}
+  header{padding:32px 0 8px;}
+  .crumb{color:var(--muted);font-size:13px;text-decoration:none;}
+  .crumb:hover{color:var(--accent);}
+  h1{font-size:24px;margin:12px 0 6px;color:#fff;font-weight:600;}
+  p.lead{color:var(--muted);font-size:14px;margin:0 0 24px;max-width:65ch;}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  label.chk{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:13px;cursor:pointer;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:800px){.grid{grid-template-columns:1fr;}}
+
+  .pane{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:6px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .pane-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:12px;
+    color:var(--muted);
+  }
+  button{
+    font-family:var(--mono);
+    font-size:12px;
+    background:var(--panel2);
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:5px 10px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  button:hover{border-color:var(--accent);color:var(--accent);}
+  button:active{transform:translateY(1px);}
+
+  textarea, pre{
+    margin:0;
+    padding:14px;
+    background:transparent;
+    border:none;
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:13px;
+    resize:none;
+    outline:none;
+    min-height:360px;
+    white-space:pre;
+    overflow:auto;
+  }
+  pre{white-space:pre-wrap;word-break:break-word;}
+  pre code{color:var(--accent);}
+
+  .status{font-size:12px;margin-top:10px;min-height:18px;}
+  .status.err{color:var(--err);}
+  .status.ok{color:var(--accent);}
+
+  footer{margin-top:40px;color:var(--muted);font-size:12px;}
+  footer a{color:var(--muted);}
+
+  .about{margin-top:48px;border-top:1px solid var(--border);padding-top:24px;color:var(--muted);font-size:14px;max-width:70ch;}
+  .about h2{color:#fff;font-size:16px;font-weight:600;margin:0 0 10px;}
+  .about p{margin:0 0 12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="crumb" href="../">← code convert</a>
+    <h1>TypeScript to JSON</h1>
+    <p class="lead">paste a TypeScript interface or type below. it generates a matching sample JSON object — useful for mock data, test fixtures, or just seeing the shape at a glance. nothing leaves your browser.</p>
+  </header>
+
+  <div class="toolbar">
+    <label class="chk"><input type="checkbox" id="fillOptional" checked> include optional fields</label>
+    <label class="chk"><input type="checkbox" id="realistic" checked> realistic sample values</label>
+    <button id="sampleBtn">load sample</button>
+  </div>
+
+  <div class="grid">
+    <div class="pane">
+      <div class="pane-head">
+        <span>TypeScript input</span>
+        <button id="clearBtn">clear</button>
+      </div>
+      <textarea id="input" spellcheck="false" placeholder="interface User {&#10;  id: number;&#10;  name: string;&#10;  active: boolean;&#10;}"></textarea>
+    </div>
+    <div class="pane">
+      <div class="pane-head">
+        <span>JSON output</span>
+        <button id="copyBtn">copy</button>
+      </div>
+      <pre id="output"><code>// output appears here</code></pre>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="about">
+    <h2>why this exists</h2>
+    <p>sometimes you have the types before you have real data — building a UI against an interface that isn't wired up to a live API yet, or writing a test fixture. hand-writing a JSON object that matches a type is easy to get subtly wrong (miss a field, wrong nesting). this tool reads your interface definitions and builds matching sample JSON automatically, including nested interfaces and arrays.</p>
+    <p>everything runs client-side in JavaScript. your code is never sent anywhere. this covers common patterns — plain interfaces/types, nested objects, arrays, optional fields, and basic unions — but very advanced TypeScript (generics, mapped types, conditional types) may not convert perfectly.</p>
+    <p>need to go the other way? try <a href="../json-to-ts/">JSON → TypeScript</a>.</p>
+  </div>
+
+  <footer>
+    part of <a href="../">code convert</a> — built by <a href="/">Bryce</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const input = document.getElementById('input');
+  const output = document.getElementById('output');
+  const status = document.getElementById('status');
+  const fillOptional = document.getElementById('fillOptional');
+  const realistic = document.getElementById('realistic');
+
+  // Parse all interface/type declarations into a map: name -> {fields: [{name, type, optional}], isUnion, unionValues}
+  function parseDeclarations(src){
+    const decls = {};
+    // strip comments
+    src = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+
+    // interface X { ... }  or  interface X extends Y { ... }
+    const ifaceRe = /interface\s+([A-Za-z_$][\w$]*)\s*(?:extends\s+[^{]+)?\{([\s\S]*?)\}/g;
+    let m;
+    while((m = ifaceRe.exec(src))){
+      decls[m[1]] = parseBody(m[2]);
+    }
+
+    // type X = { ... }
+    const typeObjRe = /type\s+([A-Za-z_$][\w$]*)\s*=\s*\{([\s\S]*?)\}\s*;?/g;
+    while((m = typeObjRe.exec(src))){
+      decls[m[1]] = parseBody(m[2]);
+    }
+
+    // type X = 'a' | 'b' | 'c';  (string literal union)
+    const typeUnionRe = /type\s+([A-Za-z_$][\w$]*)\s*=\s*([^{};]+);/g;
+    while((m = typeUnionRe.exec(src))){
+      const name = m[1];
+      if(decls[name]) continue; // already handled as object type
+      const rhs = m[2].trim();
+      if(rhs.includes('|')){
+        const parts = rhs.split('|').map(s=>s.trim());
+        decls[name] = { union: parts };
+      } else {
+        decls[name] = { alias: rhs };
+      }
+    }
+
+    return decls;
+  }
+
+  function parseBody(body){
+    const fields = [];
+    // split on ; or , or newline at top level (simple approach — good enough for typical flat/nested one-level bodies)
+    // We'll do a bracket-aware split
+    let depth = 0, cur = '', parts = [];
+    for(let i=0;i<body.length;i++){
+      const c = body[i];
+      if(c === '{' || c === '(' || c === '<' || c === '[') depth++;
+      if(c === '}' || c === ')' || c === '>' || c === ']') depth--;
+      if((c === ';' || c === ',') && depth === 0){
+        parts.push(cur); cur='';
+      } else {
+        cur += c;
+      }
+    }
+    if(cur.trim()) parts.push(cur);
+
+    for(let part of parts){
+      part = part.trim();
+      if(!part) continue;
+      const fm = part.match(/^([A-Za-z_$][\w$]*)(\?)?\s*:\s*([\s\S]+)$/);
+      if(!fm) continue;
+      const [, fname, opt, ftype] = fm;
+      fields.push({ name: fname, type: ftype.trim(), optional: !!opt });
+    }
+    return { fields };
+  }
+
+  const nameSamples = ['Alex','Jordan','Sam','Taylor','Morgan'];
+  const wordSamples = ['sample','example','value','placeholder','data'];
+  let sampleCounter = 0;
+
+  function sampleForPrimitive(typeName, fieldName){
+    const fn = (fieldName||'').toLowerCase();
+    if(realistic.checked){
+      if(/email/.test(fn)) return 'user@example.com';
+      if(/^id$|Id$/.test(fieldName||'')) return sampleCounter++ ? sampleCounter : (sampleCounter=1);
+      if(/name/.test(fn)) return nameSamples[sampleCounter++ % nameSamples.length];
+      if(/url|link/.test(fn)) return 'https://example.com';
+      if(/date|time/.test(fn)) return new Date().toISOString();
+      if(/count|total|amount|price|qty|quantity/.test(fn)) return 42;
+      if(/active|enabled|is[A-Z]/.test(fieldName||'')) return true;
+    }
+    switch(typeName){
+      case 'string': return realistic.checked ? wordSamples[sampleCounter++ % wordSamples.length] : 'string';
+      case 'number': return realistic.checked ? 42 : 0;
+      case 'boolean': return true;
+      case 'any': return null;
+      case 'unknown': return null;
+      case 'null': return null;
+      case 'undefined': return null;
+      default: return null;
+    }
+  }
+
+  function buildValue(typeStr, decls, fieldName, seen){
+    typeStr = typeStr.trim().replace(/;$/, '');
+
+    // array: T[]
+    let am = typeStr.match(/^([\s\S]+)\[\]$/);
+    if(am){
+      const inner = buildValue(am[1], decls, fieldName, seen);
+      return [inner];
+    }
+    // Array<T>
+    am = typeStr.match(/^Array<([\s\S]+)>$/);
+    if(am){
+      const inner = buildValue(am[1], decls, fieldName, seen);
+      return [inner];
+    }
+
+    // union
+    if(typeStr.includes('|')){
+      const parts = splitTop(typeStr, '|').map(s=>s.trim());
+      // string literal union
+      const litMatch = parts[0].match(/^['"](.*)['"]$/);
+      if(litMatch) return litMatch[1];
+      // e.g. "string | null" -> use string branch, drop null
+      const nonNull = parts.filter(p => p !== 'null' && p !== 'undefined');
+      return buildValue(nonNull[0] || parts[0], decls, fieldName, seen);
+    }
+
+    // inline object type: { a: string; b: number }
+    if(typeStr.startsWith('{')){
+      const body = typeStr.slice(1, typeStr.lastIndexOf('}'));
+      const parsed = parseBody(body);
+      return buildObject(parsed, decls, seen);
+    }
+
+    // string literal
+    const lit = typeStr.match(/^['"](.*)['"]$/);
+    if(lit) return lit[1];
+
+    // known primitive
+    if(['string','number','boolean','any','unknown','null','undefined'].includes(typeStr)){
+      return sampleForPrimitive(typeStr, fieldName);
+    }
+
+    // Record<string, T>
+    const rec = typeStr.match(/^Record<\s*string\s*,\s*([\s\S]+)>$/);
+    if(rec){
+      const val = buildValue(rec[1], decls, fieldName, seen);
+      return { key1: val };
+    }
+
+    // reference to another declared type
+    if(decls[typeStr]){
+      if(seen.has(typeStr)) return {}; // avoid infinite recursion
+      seen.add(typeStr);
+      const decl = decls[typeStr];
+      let result;
+      if(decl.union){
+        const litM = decl.union[0].trim().match(/^['"](.*)['"]$/);
+        result = litM ? litM[1] : decl.union[0].trim();
+      } else if(decl.alias){
+        result = buildValue(decl.alias, decls, fieldName, seen);
+      } else {
+        result = buildObject(decl, decls, seen);
+      }
+      seen.delete(typeStr);
+      return result;
+    }
+
+    // unknown/unrecognized type — best effort null
+    return null;
+  }
+
+  function splitTop(str, sep){
+    let depth=0, cur='', parts=[];
+    for(const c of str){
+      if('{(<['.includes(c)) depth++;
+      if('})>]'.includes(c)) depth--;
+      if(c===sep && depth===0){ parts.push(cur); cur=''; }
+      else cur+=c;
+    }
+    parts.push(cur);
+    return parts;
+  }
+
+  function buildObject(parsed, decls, seen){
+    const obj = {};
+    for(const f of parsed.fields){
+      if(f.optional && !fillOptional.checked) continue;
+      obj[f.name] = buildValue(f.type, decls, f.name, seen);
+    }
+    return obj;
+  }
+
+  function findRootName(src, decls){
+    // collect declared names in source order
+    const order = [];
+    const re = /(?:interface|type)\s+([A-Za-z_$][\w$]*)/g;
+    let m;
+    while((m = re.exec(src))) if(decls[m[1]]) order.push(m[1]);
+    if(order.length === 0) return Object.keys(decls)[0];
+    if(order.length === 1) return order[0];
+
+    // find names referenced as a field type inside any other declaration —
+    // the root is whichever declared name is never referenced by another
+    const referenced = new Set();
+    for(const name of order){
+      const decl = decls[name];
+      if(!decl || !decl.fields) continue;
+      for(const f of decl.fields){
+        for(const otherName of order){
+          if(otherName === name) continue;
+          // match otherName as a whole word within the field's type string
+          const wordRe = new RegExp('(^|[^\\w$])' + otherName + '($|[^\\w$])');
+          if(wordRe.test(f.type)) referenced.add(otherName);
+        }
+      }
+    }
+    const unreferenced = order.filter(n => !referenced.has(n));
+    // prefer the last unreferenced declaration (typically the "outer" one written last),
+    // falling back to the last declared name overall if everything is referenced somehow
+    if(unreferenced.length > 0) return unreferenced[unreferenced.length - 1];
+    return order[order.length - 1];
+  }
+
+  function convert(){
+    const raw = input.value;
+    if(!raw.trim()){
+      output.innerHTML = '<code>// output appears here</code>';
+      status.textContent = '';
+      status.className = 'status';
+      return;
+    }
+    sampleCounter = 0;
+    let decls;
+    try{
+      decls = parseDeclarations(raw);
+    }catch(e){
+      status.textContent = 'could not parse: ' + e.message;
+      status.className = 'status err';
+      return;
+    }
+    if(Object.keys(decls).length === 0){
+      status.textContent = 'no interface or type declaration found';
+      status.className = 'status err';
+      return;
+    }
+    const rootName = findRootName(raw, decls);
+    try{
+      const seen = new Set([rootName]);
+      const decl = decls[rootName];
+      let result;
+      if(decl.union){
+        const litM = decl.union[0].trim().match(/^['"](.*)['"]$/);
+        result = litM ? litM[1] : decl.union[0].trim();
+      } else if(decl.alias){
+        result = buildValue(decl.alias, decls, rootName, seen);
+      } else {
+        result = buildObject(decl, decls, seen);
+      }
+      output.innerHTML = '<code>' + escapeHtml(JSON.stringify(result, null, 2)) + '</code>';
+      status.textContent = 'converted (root: ' + rootName + ')';
+      status.className = 'status ok';
+    }catch(e){
+      status.textContent = 'error building JSON: ' + e.message;
+      status.className = 'status err';
+    }
+  }
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  input.addEventListener('input', debounce(convert, 200));
+  fillOptional.addEventListener('change', convert);
+  realistic.addEventListener('change', convert);
+
+  function debounce(fn, ms){
+    let t;
+    return function(){ clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    input.value = '';
+    convert();
+    input.focus();
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', ()=>{
+    const text = output.textContent;
+    if(!text || text.startsWith('// output')) return;
+    navigator.clipboard.writeText(text).then(()=>{
+      status.textContent = 'copied to clipboard';
+      status.className = 'status ok';
+    }).catch(()=>{
+      status.textContent = 'could not copy — select manually';
+      status.className = 'status err';
+    });
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', ()=>{
+    input.value = `interface Address {
+  city: string;
+  zip: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  active: boolean;
+  bio?: string;
+  address: Address;
+  tags: string[];
+}`;
+    convert();
+  });
+
+  convert();
+})();
+</script>
+</body>
+</html>
