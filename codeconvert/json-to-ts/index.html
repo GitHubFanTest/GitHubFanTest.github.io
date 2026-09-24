@@ -170,6 +170,7 @@
     <h2>why this exists</h2>
     <p>writing interfaces by hand for a deeply nested API response is slow and easy to get wrong — miss one optional field or mistype a nested array and TypeScript will complain the whole way down. this tool reads the actual shape of your JSON and generates matching types in one pass, including nested objects as their own named interfaces.</p>
     <p>everything runs client-side in JavaScript. your data is never sent anywhere.</p>
+    <p>need to go the other way? try <a href="../ts-to-json/">TypeScript → JSON</a>.</p>
   </div>
 
   <footer>
@@ -351,7 +352,7 @@
   document.getElementById('sampleBtn').addEventListener('click', ()=>{
     input.value = JSON.stringify({
       id: 1,
-      username: "brycetaylor",
+      username: "brycewashere",
       active: true,
       score: 1520.5,
       bio: null,
